@@ -8,9 +8,11 @@ class Channel:
     """Класс для ютуб-канала"""
     API_KEY: str = os.getenv('API_KEY_YOUTUBE')
     youtube = build('youtube', 'v3', developerKey=API_KEY)
+
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
         self.__channel_id = channel_id
+        # youtube = build('youtube', 'v3', developerKey=API_KEY)
         self.channel = Channel.youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
         self.__title = self.channel['items'][0]['snippet']['title']
         self.__description = self.channel['items'][0]['snippet']['description']
@@ -19,7 +21,39 @@ class Channel:
         self.__video_count = self.channel['items'][0]['statistics']['videoCount']
         self.__view_count = self.channel['items'][0]['statistics']['viewCount']
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.title})"
 
+    def __str__(self):
+        return f"{self.title} ({self.url})"
+
+    def __add__(self, other):
+        """функция сложения количества подписчиков"""
+        return int(self.subscriber_count) + int(other.subscriber_count)
+
+    def __sub__(self, other):
+        """функция вычитания количества подписчиков"""
+        return int(self.subscriber_count) - int(other.subscriber_count)
+
+    def __gt__(self, other):
+        """функция сравнения количества подписчиков"""
+        return int(self.subscriber_count) > int(other.subscriber_count)
+
+    def __ge__(self, other):
+        """функция сравнения количества подписчиков"""
+        return int(self.subscriber_count) >= int(other.subscriber_count)
+
+    def __lt__(self, other):
+        """функция сравнения количества подписчиков"""
+        return int(self.subscriber_count) < int(other.subscriber_count)
+
+    def __le__(self, other):
+        """функция сравнения количества подписчиков"""
+        return int(self.subscriber_count) <= int(other.subscriber_count)
+
+    def __eq__(self, other):
+        """функция сравнения количества подписчиков"""
+        return int(self.subscriber_count) == int(other.subscriber_count)
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
@@ -56,13 +90,13 @@ class Channel:
     @classmethod
     def get_service(cls):
         """
-        Возвращает объект для работы с YouTube API
+        возвращающий объект для работы с YouTube API
         """
         return cls.youtube
 
     def to_json(self, file):
         """
-        Сохраняет данные в JSON файл (создает новый или перезаписывает существующий)
+        Сохраняет данные в JSON файл (создает новй или перезаписывает существующий)
         атрибут file - название файла для записи.
         """
         self_dict = {'id канала': self.channel_id,
