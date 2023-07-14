@@ -14,30 +14,14 @@ class Video:
         self.video_response = YOUTUBE.videos().list(part='snippet,statistics,contentDetails,topicDetails',
                                                id=self.video_id
                                                ).execute()
-        self.__title = self.video_response['items'][0]['snippet']['title']
-        self.__url = 'https://www.youtube.com/channel/' + self.video_id
-        self.__viewCount = self.video_response['items'][0]['statistics']['viewCount']
-        self.__likeCount = self.video_response['items'][0]['statistics']['likeCount']
+        self.title = self.video_response['items'][0]['snippet']['title']
+        self.url = 'https://youtu.be/' + self.video_id
+        self.view_count = int(self.video_response['items'][0]['statistics']['viewCount'])
+        self.like_count = int(self.video_response['items'][0]['statistics']['likeCount'])
 
 
     def __str__(self):
-        return f'{self.__title}'
-
-    @property
-    def title(self):
-        return self.__title
-
-    @property
-    def url(self):
-        return self.__url
-
-    @property
-    def __view_count(self):
-        return self.__view_count
-
-    @property
-    def __like_count(self):
-        return self.__like_count
+        return f'{self.title}'
 
 
     def printj(self):
